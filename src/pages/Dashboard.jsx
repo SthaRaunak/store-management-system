@@ -1,12 +1,12 @@
 import { styled } from "styled-components";
 
 const StyledHeader = styled.h2`
-  color: red;
+  color: yellow;
 `;
 function Dashboard() {
   return (
     <div>
-      <StyledHeader>Styled component test</StyledHeader>
+      <StyledHeader>Dashboard component</StyledHeader>
     </div>
   );
 }
