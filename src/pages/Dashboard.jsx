@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 
 const StyledHeader = styled.h2`
-  color: yellow;
+  color: black;
 `;
 function Dashboard() {
   return (

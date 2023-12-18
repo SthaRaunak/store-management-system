@@ -1,12 +1,13 @@
 import styled from "styled-components";
 
 const StyledHeader = styled.header`
-  background-color: brown;
+  background-color: var(--color-testLighter);
   padding: 1rem 5rem;
   border-bottom: 1px solid black;
+  color: white;
 `;
 function Header() {
-  return <StyledHeader>Store Management Header</StyledHeader>;
+  return <StyledHeader> Header</StyledHeader>;
 }
 
 export default Header;
