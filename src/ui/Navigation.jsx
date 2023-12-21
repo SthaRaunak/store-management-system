@@ -34,6 +34,9 @@ const StyledNavItem = styled(NavLink)`
     background-color: var(--color-brand);
     border-radius: 8px;
   }
+  &::after{
+    border: 2px solid black;
+  }
   & svg {
     width: 1.3rem;
     height: 1.3rem;

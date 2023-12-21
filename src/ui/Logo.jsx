@@ -9,7 +9,7 @@ const StyledLogo = styled.div`
 `;
 
 function Logo() {
-  return <StyledLogo>AresSMS</StyledLogo>;
+  return <StyledLogo>AresSM</StyledLogo>;
 }
 
 export default Logo;
