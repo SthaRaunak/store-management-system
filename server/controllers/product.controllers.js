@@ -1,7 +1,10 @@
+import mongoose from "mongoose";
+
 import { asycnHandler } from "../utils/asycnHandler.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { Product } from "../models/product.model.js";
 import { ApiError } from "../utils/ApiError.js";
+
 
 const addProduct = asycnHandler(async (req, res, next) => {
     const {
@@ -54,7 +57,32 @@ const getAllProducts = asycnHandler(async (req, res, next) => {
 
     console.log(totalProducts);
     res.status(200).json(
-        new ApiResponse(200, {products , productCount: totalProducts}, "Products fetched successfully")
+        new ApiResponse(
+            200,
+            { products, productCount: totalProducts },
+            "Products fetched successfully"
+        )
     );
 });
-export { addProduct, getAllProducts };
+
+const deleteProduct = asycnHandler(async (req, res, next) => {
+    const { id } = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        throw new ApiError(400,"Invalid product id, Please check the id again!");
+    }
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+        throw new ApiError(400,"Product doesnt Exist");
+    }
+
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    res.status(200).json(
+        new ApiResponse(202, deletedProduct, "Product deleted successfully")
+    );
+});
+
+export { addProduct, getAllProducts, deleteProduct };
