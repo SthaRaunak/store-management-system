@@ -4,7 +4,7 @@ import { asycnHandler } from "../utils/asycnHandler.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { Product } from "../models/product.model.js";
 import { ApiError } from "../utils/ApiError.js";
-
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const addProduct = asycnHandler(async (req, res, next) => {
     const {
@@ -23,17 +23,23 @@ const addProduct = asycnHandler(async (req, res, next) => {
     }
     const productImageLocalPath = req?.file?.path;
 
-    console.log(req.file);
+    // console.log(req.file);
 
     if (!productImageLocalPath) {
         throw new ApiError(400, "Product Image not Found");
+    }
+
+    const productImage = await uploadOnCloudinary(productImageLocalPath);
+
+    if (!productImage) {
+        throw new ApiError(500, "Image failed to Upload, Please try again.");
     }
 
     const product = await Product.create({
         productName,
         productSummary,
         productPrice,
-        productImage: productImageLocalPath,
+        productImage: productImage.url,
         productDiscount: productDiscount || 0,
         productDescription,
         productQuantity,
@@ -68,14 +74,17 @@ const getAllProducts = asycnHandler(async (req, res, next) => {
 const deleteProduct = asycnHandler(async (req, res, next) => {
     const { id } = req.params;
 
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        throw new ApiError(400,"Invalid product id, Please check the id again!");
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ApiError(
+            400,
+            "Invalid product id, Please check the id again!"
+        );
     }
 
     const product = await Product.findById(id);
 
     if (!product) {
-        throw new ApiError(400,"Product doesnt Exist");
+        throw new ApiError(400, "Product doesnt Exist");
     }
 
     const deletedProduct = await Product.findByIdAndDelete(id);
