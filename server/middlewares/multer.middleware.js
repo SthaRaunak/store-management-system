@@ -1,16 +1,26 @@
 import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
-const fileDest = "./public/temp";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const dest_folder = path.join(__dirname, "../public/temp");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, fileDest);
+        if (!fs.existsSync(dest_folder)) {
+            fs.mkdirSync(dest_folder, { recursive: true });
+        }
+
+        cb(null, dest_folder);
     },
 
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
         const ext = path.extname(file.originalname);
-        cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+        cb(null, file.fieldname + "-" + uniqueSuffix + ext);
     },
 });
 

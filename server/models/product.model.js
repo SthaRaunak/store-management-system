@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const productSchema = new Schema(
     {
@@ -7,7 +7,7 @@ const productSchema = new Schema(
             required: true,
         },
 
-        prodcutImage: {
+        productImage: {
             type: String, //cloudinary url
             required: true,
         },
@@ -38,7 +38,7 @@ const productSchema = new Schema(
         productCategory: [
             {
                 type: Schema.Types.ObjectId,
-                ref: Category,
+                ref: "Category",
             },
         ],
     },

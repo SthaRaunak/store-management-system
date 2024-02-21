@@ -2,7 +2,8 @@ class ApiError extends Error {
     constructor(
         statusCode,
         message = "Error: something went wrong",
-        errors = []
+        errors = [],
+        stack
     ) {
         super(message); //passing the message to built in Error class (parent class)
 
@@ -19,3 +20,5 @@ class ApiError extends Error {
         }
     }
 }
+
+export {ApiError}

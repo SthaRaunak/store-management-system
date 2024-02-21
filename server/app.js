@@ -11,7 +11,7 @@ const corsOption = {
 app.use(cors(corsOption));
 
 //ROUTES IMPORT:
-import productRoute from "./routes/product.routes.js" ;
+import productRoute from "./routes/product.route.js" ;
 
 //ROUTES DECLARATION
 app.use('/api/v0/products',productRoute);
