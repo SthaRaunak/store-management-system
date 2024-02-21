@@ -1,9 +1,9 @@
 import { asycnHandler } from "../utils/asycnHandler.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { Product } from "../models/product.model.js";
-import {ApiError} from "../utils/ApiError.js";
+import { ApiError } from "../utils/ApiError.js";
 
-const addProduct = asycnHandler(async(req, res, next) => {
+const addProduct = asycnHandler(async (req, res, next) => {
     const {
         productName,
         productSummary,
@@ -13,10 +13,9 @@ const addProduct = asycnHandler(async(req, res, next) => {
         productQuantity,
     } = req.body;
 
-    for(let keys in req.body){
-        if(!req.body[keys])
-        {
-            throw new ApiError(400,"All fields are required");
+    for (let keys in req.body) {
+        if (!req.body[keys]) {
+            throw new ApiError(400, "All fields are required");
         }
     }
     const productImageLocalPath = req?.file?.path;
@@ -38,7 +37,10 @@ const addProduct = asycnHandler(async(req, res, next) => {
     });
 
     if (!product) {
-        throw new ApiError(500, "Interal Server Error: error while creating product");
+        throw new ApiError(
+            500,
+            "Interal Server Error: error while creating product"
+        );
     }
 
     res.status(200).json(
@@ -46,4 +48,13 @@ const addProduct = asycnHandler(async(req, res, next) => {
     );
 });
 
-export { addProduct };
+const getAllProducts = asycnHandler(async (req, res, next) => {
+    const products = await Product.find().select("-productDescription");
+    const totalProducts = await Product.countDocuments();
+
+    console.log(totalProducts);
+    res.status(200).json(
+        new ApiResponse(200, {products , productCount: totalProducts}, "Products fetched successfully")
+    );
+});
+export { addProduct, getAllProducts };
