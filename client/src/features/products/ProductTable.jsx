@@ -6,6 +6,7 @@ import {
     getCoreRowModel,
     flexRender,
 } from "@tanstack/react-table";
+import { formatCreatedAt } from "../../utils/formatDate.js";
 
 function ProductTable() {
     const { products = [], isLoadingProducts } = useProducts();
@@ -52,7 +53,7 @@ function ProductTable() {
         },
         {
             header: "Created At",
-            accessorKey: "createdAt", // To do : create a date format fxn to format
+            accessorFn: (row) => formatCreatedAt(row.createdAt),
         },
         {
             header: "Actions",
