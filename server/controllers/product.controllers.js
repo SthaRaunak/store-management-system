@@ -61,11 +61,11 @@ const getAllProducts = asycnHandler(async (req, res, next) => {
     const products = await Product.find().select("-productDescription");
     const totalProducts = await Product.countDocuments();
 
-    console.log(totalProducts);
+    // console.log(totalProducts);
     res.status(200).json(
         new ApiResponse(
             200,
-            { products, productCount: totalProducts },
+            { products, productsCount: totalProducts },
             "Products fetched successfully"
         )
     );

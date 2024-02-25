@@ -7,7 +7,7 @@ const StyledHeader = styled.header`
   color: white;
 `;
 function Header() {
-  return <StyledHeader> Header</StyledHeader>;
+  return <StyledHeader>{new Date().getFullYear()}</StyledHeader>;
 }
 
 export default Header;
