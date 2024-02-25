@@ -14,7 +14,7 @@ const formatCreatedAt = (createdAt) => {
 
     const timeString = date.toLocaleTimeString("en-US", timeOption);
 
-    return `${dateString}${timeString}`;
+    return `${dateString} ${timeString}`;
 };
 
 export { formatCreatedAt };

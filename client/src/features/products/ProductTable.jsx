@@ -7,9 +7,11 @@ import {
     flexRender,
 } from "@tanstack/react-table";
 import { formatCreatedAt } from "../../utils/formatDate.js";
+import { useDeleteProduct } from "./useDeleteProduct.js";
 
 function ProductTable() {
     const { products = [], isLoadingProducts } = useProducts();
+    const { isDeletingProduct, deleteProduct } = useDeleteProduct();
     /*
        {
                 "_id": "65d60619ddb76b915f1b3ee6",
@@ -57,7 +59,10 @@ function ProductTable() {
         },
         {
             header: "Actions",
-        }
+            cell: (tableProps) => (
+                <h4 onClick={() => deleteProduct(tableProps.row.original._id)}>X</h4>
+            )
+        },
     ];
 
     const table = useReactTable({
