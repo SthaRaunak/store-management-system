@@ -8,6 +8,9 @@ const fetchProducts = async () => {
 };
 
 const deleteProduct = async(id) => {
+    if(!id){
+        console.error("Please provided product ID");
+    }
     const response = await fetch(`http://localhost:8000/api/v0/products/deleteProduct/${id}`,{
         method: 'DELETE'
     });

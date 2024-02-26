@@ -4,7 +4,7 @@ import { asycnHandler } from "../utils/asycnHandler.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { Product } from "../models/product.model.js";
 import { ApiError } from "../utils/ApiError.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deleteOnCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const addProduct = asycnHandler(async (req, res, next) => {
     const {
@@ -82,12 +82,22 @@ const deleteProduct = asycnHandler(async (req, res, next) => {
     }
 
     const product = await Product.findById(id);
-
     if (!product) {
         throw new ApiError(400, "Product doesnt Exist");
     }
 
     const deletedProduct = await Product.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+        throw new ApiError(500, "Server Error: Product failed to delete");
+    }
+
+
+    const cloudinaryResponse = await deleteOnCloudinary(
+        deletedProduct?.productImage
+    );
+
+    // console.log(cloudinaryResponse);
 
     res.status(200).json(
         new ApiResponse(202, deletedProduct, "Product deleted successfully")

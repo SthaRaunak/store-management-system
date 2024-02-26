@@ -7,6 +7,11 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+//getPublicId(http://res.cloudinary.com/dov2k3v5z/image/upload/v1708889403/nls6l3n3etne7d8xx0ul.jpg); : nls6l3n3etne7d8xx0ul
+const getPublicId = (cloudinaryUrl) => {
+    return cloudinaryUrl.split("/").pop().split(".").at(0);
+};
+
 const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) {
@@ -39,4 +44,25 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 };
 
-export { uploadOnCloudinary };
+const deleteOnCloudinary = async (cloudinaryUrl) => {
+    try {
+        if (!cloudinaryUrl) return null;
+
+        const response = await cloudinary.uploader.destroy(
+            getPublicId(cloudinaryUrl),
+            {
+                resource_type: "image",
+            }
+        );
+
+        return response;
+    } catch (error) {
+        console.error(
+            "Cloudinary Error: File failed to destroy on cloundinary: ",
+            error
+        );
+        return null;
+    }
+};
+
+export { uploadOnCloudinary, deleteOnCloudinary };
