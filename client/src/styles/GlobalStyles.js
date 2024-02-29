@@ -8,6 +8,8 @@ const GlobalStyles = createGlobalStyle`
     --color-gray: #F5F5F5;
     --color-testLighter: #1F2D26;
     --color-danger: #67120F;
+    --backdrop-color: rgba(255, 255, 225 ,0.1);
+    
 }
 *{
     box-sizing: border-box;

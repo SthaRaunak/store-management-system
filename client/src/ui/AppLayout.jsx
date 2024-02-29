@@ -13,6 +13,7 @@ const Main = styled.main`
   background-color: var(--color-gray);
   padding: 4rem 4rem;
   overflow: auto;
+  min-width: 700px;
 `;
 
 const Container = styled.div`
