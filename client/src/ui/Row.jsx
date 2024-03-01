@@ -14,6 +14,7 @@ const Row = styled.div`
         props.type === "horizontal" &&
         css`
             flex-direction: row;
+            gap: 1.2rem;
             justify-content: space-between;
             align-items: center;
         `}

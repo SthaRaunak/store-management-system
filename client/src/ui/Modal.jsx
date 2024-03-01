@@ -11,7 +11,7 @@ const StyledWindow = styled.div`
     background-color: white;
     border: 0.3px black solid;
     border-radius: 8px;
-    padding: 2rem 3.2rem;
+    padding: 1rem 1.5rem;
     transition: all 0.5s;
 `;
 
