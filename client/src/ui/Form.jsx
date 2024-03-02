@@ -13,20 +13,19 @@ const Title = styled.h4`
 `;
 
 const Subtitle = styled.p`
-    font-size: 0.850rem;
+    font-size: 0.85rem;
     font-weight: 400;
     color: grey;
     margin-bottom: 10px;
-`
+`;
 
 Form.defaultProps = {
     type: "normal",
 };
 
-
-function Form({ children, title, subtitle }) {
+function Form({ children, title, subtitle, onSubmit }) {
     return (
-        <StyledForm>
+        <StyledForm onSubmit={onSubmit}>
             {title && <Title>{title}</Title>}
             {subtitle && <Subtitle>{subtitle}</Subtitle>}
             {children}

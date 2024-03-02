@@ -40,7 +40,7 @@ const Button = styled.button`
   transition: 0.3s all;
   box-shadow: 2px 2px 10px #0000002a;
   ${(props) => sizes[props.size]};
-  ${(props) => types[props.type]};
+  ${(props) => types[props.variation]};
 `;
 
 Button.defaultProps = {

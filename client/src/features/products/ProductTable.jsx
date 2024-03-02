@@ -47,7 +47,8 @@ function ProductTable() {
         },
         {
             header: "Price",
-            accessorFn: (row) => formatCurrency(row.productPrice - row.productDiscount),
+            accessorFn: (row) =>
+                formatCurrency(row.productPrice - row.productDiscount),
         },
         {
             header: "Quantity",

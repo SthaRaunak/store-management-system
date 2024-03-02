@@ -17,6 +17,9 @@ const Row = styled.div`
             gap: 1.2rem;
             justify-content: space-between;
             align-items: center;
+            &:has(input){
+                align-items: baseline;
+            }
         `}
 `;
 

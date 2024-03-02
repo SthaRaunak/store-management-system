@@ -16,7 +16,7 @@ const Label = styled.label`
 `;
 
 const Error = styled.span`
-    font-size: 1.2rem;
+    font-size: 0.8rem;
     color: red;
 `;
 

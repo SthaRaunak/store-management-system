@@ -7,7 +7,7 @@ import { addProduct, deleteProduct, getAllProducts} from "../controllers/product
 const router = Router();
 
 router.route("/getProducts").get(getAllProducts);
-router.route("/addProducts").post(upload.single("productImage"), addProduct);
+router.route("/addProduct").post(upload.single("productImage"), addProduct);
 router.route("/deleteProduct/:id").delete(deleteProduct);
 
 
