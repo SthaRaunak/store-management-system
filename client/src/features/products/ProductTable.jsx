@@ -61,8 +61,13 @@ function ProductTable() {
         {
             header: "Actions",
             cell: (tableProps) => (
-                <h4 onClick={() => deleteProduct(tableProps.row.original._id)}>X</h4>
-            )
+                <h4
+                    onClick={() => deleteProduct(tableProps.row.original._id)}
+                    style={{ cursor: "pointer" }}
+                >
+                    X
+                </h4>
+            ),
         },
     ];
 

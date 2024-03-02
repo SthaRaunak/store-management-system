@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addProduct as addProductApi } from "../../api/products.api.js";
+import { toast } from "react-toastify";
 
 const useAddProduct = () => {
     const queryClient = useQueryClient();
@@ -12,13 +13,15 @@ const useAddProduct = () => {
     } = useMutation({
         mutationFn: (productData) => addProductApi(productData),
         onSuccess: () => {
-            console.log("Succesfully added Product");
             queryClient.invalidateQueries({
                 queryKey: ["products"],
             });
+
+            toast.success("Product added successfully");
         },
-        onError: () => {
-            console.error("Error adding Products");
+        onError: (error) => {
+            toast.error("Product failed to add.")
+            console.error(error.message);
         },
     });
 
