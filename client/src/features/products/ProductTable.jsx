@@ -1,4 +1,3 @@
-import React from "react";
 import { useProducts } from "./useProducts.js";
 import Table from "../../ui/Table.jsx";
 import {
@@ -8,6 +7,7 @@ import {
 } from "@tanstack/react-table";
 import { formatCreatedAt } from "../../utils/formatDate.js";
 import { useDeleteProduct } from "./useDeleteProduct.js";
+import { formatCurrency } from "../../utils/formatCurrency.js";
 
 function ProductTable() {
     const { products = [], isLoadingProducts } = useProducts();
@@ -47,7 +47,7 @@ function ProductTable() {
         },
         {
             header: "Price",
-            accessorFn: (row) => row.productPrice - row.productDiscount,
+            accessorFn: (row) => formatCurrency(row.productPrice - row.productDiscount),
         },
         {
             header: "Quantity",
