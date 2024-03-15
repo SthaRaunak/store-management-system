@@ -58,7 +58,9 @@ const addProduct = asycnHandler(async (req, res, next) => {
 });
 
 const getAllProducts = asycnHandler(async (req, res, next) => {
-    const products = await Product.find().select("-productDescription");
+    const products = await Product.find().select(
+        "-productDescription, -summary"
+    );
     const totalProducts = await Product.countDocuments();
 
     // console.log(totalProducts);
@@ -92,7 +94,6 @@ const deleteProduct = asycnHandler(async (req, res, next) => {
         throw new ApiError(500, "Server Error: Product failed to delete");
     }
 
-
     const cloudinaryResponse = await deleteOnCloudinary(
         deletedProduct?.productImage
     );
@@ -104,4 +105,52 @@ const deleteProduct = asycnHandler(async (req, res, next) => {
     );
 });
 
-export { addProduct, getAllProducts, deleteProduct };
+const getProductDetail = asycnHandler(async (req, res, next) => {
+    const { id } = req.params;
+
+    if (!id) {
+        throw new ApiError(400, "id not provided");
+    }
+
+    const productData = await Product.aggregate([
+        {
+            $match: { _id: new mongoose.Types.ObjectId(id) },
+        },
+        {
+            $lookup: {
+                from: "categories",
+                localField: "productCategory",
+                foreignField: "_id",
+                as: "productCategory",
+            },
+        },
+        {
+            $addFields: {
+                productTotalPrice: {$subtract: ["$productPrice","$productDiscount"] },
+            }
+        },
+        {
+            $addFields: {
+                productStockValue: {$multiply: ["$productTotalPrice","$productQuantity"]},
+            }
+        },
+        {
+            $project: {
+                productName: 1,
+                productImage: 1,
+                productSummary: 1,
+                productDescription: 1,
+                productPrice: 1,
+                productDiscount: 1,
+                productQuantity: 1,
+                productTotalPrice: 1,
+                productStockValue: 1,
+                productCategory: 1,
+            },
+        },
+    ]);
+
+    res.status(200).json(new ApiResponse(200, productData[0], "Product detail fetched successfully"));
+});
+
+export { addProduct, getAllProducts, deleteProduct, getProductDetail };
