@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
-import { asycnHandler } from "../utils/asycnHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { Product } from "../models/product.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { deleteOnCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
-const addProduct = asycnHandler(async (req, res, next) => {
+const addProduct = asyncHandler(async (req, res, next) => {
     const {
         productName,
         productSummary,
@@ -57,7 +57,7 @@ const addProduct = asycnHandler(async (req, res, next) => {
     );
 });
 
-const getAllProducts = asycnHandler(async (req, res, next) => {
+const getAllProducts = asyncHandler(async (req, res, next) => {
     const products = await Product.find().select(
         "-productDescription, -summary"
     );
@@ -73,7 +73,7 @@ const getAllProducts = asycnHandler(async (req, res, next) => {
     );
 });
 
-const deleteProduct = asycnHandler(async (req, res, next) => {
+const deleteProduct = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -105,7 +105,7 @@ const deleteProduct = asycnHandler(async (req, res, next) => {
     );
 });
 
-const getProductDetail = asycnHandler(async (req, res, next) => {
+const getProductDetail = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
 
     if (!id) {
@@ -126,13 +126,17 @@ const getProductDetail = asycnHandler(async (req, res, next) => {
         },
         {
             $addFields: {
-                productTotalPrice: {$subtract: ["$productPrice","$productDiscount"] },
-            }
+                productTotalPrice: {
+                    $subtract: ["$productPrice", "$productDiscount"],
+                },
+            },
         },
         {
             $addFields: {
-                productStockValue: {$multiply: ["$productTotalPrice","$productQuantity"]},
-            }
+                productStockValue: {
+                    $multiply: ["$productTotalPrice", "$productQuantity"],
+                },
+            },
         },
         {
             $project: {
@@ -150,7 +154,75 @@ const getProductDetail = asycnHandler(async (req, res, next) => {
         },
     ]);
 
-    res.status(200).json(new ApiResponse(200, productData[0], "Product detail fetched successfully"));
+    res.status(200).json(
+        new ApiResponse(
+            200,
+            productData[0],
+            "Product detail fetched successfully"
+        )
+    );
 });
 
-export { addProduct, getAllProducts, deleteProduct, getProductDetail };
+const updateProductImage = asyncHandler(async (req, res, next) => {
+    const { id } = req.params;
+    if (!id) throw new ApiError(400, "product id not provided");
+
+    const product = await Product.aggregate([
+        {
+            $match: { _id: new mongoose.Types.ObjectId(id) },
+        },
+        {
+            $project: {
+                productImage: 1,
+            },
+        },
+    ]);
+
+    if (!product) throw new ApiError(404, "Product with id not found!");
+
+    const { productImage: oldImageCloudUrl } = product[0];
+
+    const imageLocalPath = req.file?.path;
+
+    if (!imageLocalPath) {
+        throw new ApiError(400, "Product Image not provided");
+    }
+
+    const productImage = await uploadOnCloudinary(imageLocalPath);
+
+    if (!productImage) {
+        throw new ApiError(500, "Image failed to Upload, Please try again");
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+        id,
+        {
+            $set: {
+                productImage: productImage.url,
+            },
+        },
+        {
+            new: true,
+        }
+    ).select("-productDescription -summary");
+
+    const cloudinaryResponse = await deleteOnCloudinary(oldImageCloudUrl);
+
+    console.log(cloudinaryResponse);
+
+    res.status(200).json(
+        new ApiResponse(
+            200,
+            updatedProduct,
+            "Product Image successfully updated"
+        )
+    );
+});
+
+export {
+    addProduct,
+    getAllProducts,
+    deleteProduct,
+    getProductDetail,
+    updateProductImage,
+};
