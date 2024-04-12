@@ -1,13 +1,14 @@
 import React, { cloneElement } from "react";
 import styled from "styled-components";
-import {createPortal} from "react-dom";
+import { createPortal } from "react-dom";
 import { useOnClickOutside } from "../hooks/useOnClickOutside";
+import { useKeyPress } from "../hooks/useKeyPress";
 
 const StyledWindow = styled.div`
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     background-color: white;
     border: 0.3px black solid;
     border-radius: 8px;
@@ -62,20 +63,17 @@ function Modal({ children }) {
 
 function Window({ children }) {
     const { isModalOpen, handleCloseModal } = useModalContext();
-
+    useKeyPress("Escape", handleCloseModal);
     const ref = useOnClickOutside(handleCloseModal);
 
     if (!isModalOpen) return null;
 
-
     return createPortal(
         <Overlay>
             <StyledWindow ref={ref}>
-                {
-                    cloneElement(children, {
-                        onCloseModal: handleCloseModal   //so children element can integrate this inside the modal
-                    })
-                }
+                {cloneElement(children, {
+                    onCloseModal: handleCloseModal, //so children element can integrate this inside the modal
+                })}
             </StyledWindow>
         </Overlay>,
         document.body
